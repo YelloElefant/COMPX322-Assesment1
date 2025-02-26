@@ -11,14 +11,15 @@ async function getEventDetails(eventID) {
 }
 
 async function getWeatherDetails(lonLat) {
-   let [lon, lat] = lonLat.split(',');
+   let [lat, lon] = lonLat.split(',');
    lon = lon.trim();
    lat = lat.trim();
-   // https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-   const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=77c6eeaedce8e1980f6e4fb43b005e2e`, { mode: 'no-cors' });
+   console.log(`Longitude: ${lon}, Latitude: ${lat}`);
+
+   const url = "getWeather.php?lat=" + lat + "&lon=" + lon;
+   const response = await fetch(url);
    const data = await response.json();
    return data;
-
 }
 
 
@@ -58,19 +59,19 @@ function displayEvents(events) {
                   icon.addEventListener('click', () => {
                      weatherInfo.style.display = 'block';
                      weatherInfo.innerHTML = '';
-                     // const weatherDetails = ['temperature', 'humidity', 'weather'];
-                     // weatherDetails.forEach(weatherDetail => {
-                     //    const detail = document.createElement('p');
-                     //    detail.textContent = `${weatherDetail}: ${details[weatherDetail]}`;
-                     //    weatherInfo.appendChild(detail);
-                     // });
 
                      getWeatherDetails(details["lon_lat"]).then(weather => {
                         console.log(weather);
                         const weatherDetails = ['temp', 'humidity', 'weather'];
                         weatherDetails.forEach(weatherDetail => {
                            const detail = document.createElement('p');
-                           detail.textContent = `${weatherDetail}: ${weather[weatherDetail]}`;
+
+                           detail.textContent = `${weatherDetail}: ${weather.main[weatherDetail]}`;
+
+                           if (weatherDetail === 'weather') {
+                              detail.textContent = `${weatherDetail}: ${weather.weather[0].description}`;
+                           }
+
                            weatherInfo.appendChild(detail);
                         });
                      });
