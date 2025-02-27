@@ -15,14 +15,14 @@ $sql = "SELECT * FROM events";
 $events = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 // only return name and location
-$events = array_map(function ($event) {
-   return [
-      'name' => $event['name'],
-      'location' => $event['location'],
-      'id' => $event['id']
+// $events = array_map(function ($event) {
+//    return [
+//       'name' => $event['name'],
+//       'location' => $event['location'],
+//       'id' => $event['id']
 
-   ];
-}, $events);
+//    ];
+// }, $events);
 
 
 
