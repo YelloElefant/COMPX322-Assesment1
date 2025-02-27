@@ -4,7 +4,7 @@ $con = null;
 header('Content-Type: application/json');
 
 try {
-   $con = new PDO('mysql:host=192.168.1.29;port=3221;dbname=Assesment1', 'root', 'root');
+   $con = new PDO('mysql:host=learn-mysql.cms.waikato.ac.nz;dbname=at997', 'at997', 'my481662sql');
 } catch (PDOException $e) {
    echo "Database connection error " . $e->getMessage();
 }
