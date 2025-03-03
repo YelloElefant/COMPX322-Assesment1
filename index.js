@@ -14,7 +14,7 @@ function formatSet(obj) {
   console.log(Object.keys(obj));
 
   return Object.keys(obj)
-    .map((key) => key + " = '" + obj[key] + "'")
+    .map((key) => key + ' = "' + obj[key] + '"')
     .join(",");
 }
 
@@ -126,7 +126,10 @@ fetch("events.php?eventID=all", { mode: "no-cors" })
                 }),
               })
                 .then((response) => response.text())
-                .then((response) => console.log(response));
+                .then((response) => console.log(response))
+                .then(() => {
+                  cell.innerHTML = changedValues.name;
+                });
             });
 
             eventDetails.appendChild(saveButton);
@@ -134,6 +137,7 @@ fetch("events.php?eventID=all", { mode: "no-cors" })
         }
 
         row.appendChild(cell);
+        event.data = cell;
       });
       eventTable.appendChild(row);
     });

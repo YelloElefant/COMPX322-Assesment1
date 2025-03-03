@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 ul {
@@ -25,14 +26,14 @@ a:hover {
   display: none;
 }
 
-div,
+.item,
 table {
   margin: 5px;
   padding: 5px;
   border: solid thin black;
 }
 
-body {
+#wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
