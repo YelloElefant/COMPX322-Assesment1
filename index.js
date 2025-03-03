@@ -14,7 +14,7 @@ function formatSet(obj) {
   console.log(Object.keys(obj));
 
   return Object.keys(obj)
-    .map((key) => key + " = " + obj[key])
+    .map((key) => key + " = '" + obj[key] + "'")
     .join(",");
 }
 
