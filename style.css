@@ -5,6 +5,11 @@
   font-family: "Poppins", sans-serif;
 }
 
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -14,30 +19,48 @@ ul {
 
 a {
   text-decoration: none;
-  color: black;
+  color: #bb86fc;
 }
 
 a:hover {
-  color: red;
+  color: #03dac6;
+}
+
+#wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
 }
 
 #eventDetails,
 #weatherInfo {
   display: none;
+  background-color: #1e1e1e;
+  border: solid thin #bb86fc;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
 }
 
 .item,
 table {
   margin: 5px;
   padding: 5px;
-  border: solid thin black;
+  border: solid thin #bb86fc;
+  background-color: #1e1e1e;
+  border-radius: 5px;
 }
 
-#wrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+th,
+td {
+  padding: 10px;
+  border: solid thin #bb86fc;
+}
+
+th {
+  background-color: #333333;
 }
 
 .eventDetail td {
@@ -45,10 +68,25 @@ table {
 }
 
 .eventDetail td:nth-child(odd) {
-  border-right: solid thin black;
+  border-right: solid thin #bb86fc;
 }
 
 button {
   height: 50px;
   width: 150px;
+  background-color: #bb86fc;
+  color: #121212;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #03dac6;
+}
+
+/* Added hover styles for clickable rows */
+#eventTable tr:hover {
+  background-color: #333333;
+  cursor: pointer;
 }
