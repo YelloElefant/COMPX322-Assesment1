@@ -79,10 +79,17 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 5px;
 }
 
 button:hover {
   background-color: #03dac6;
+}
+
+#buttonStorage {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
 /* Added hover styles for clickable rows */

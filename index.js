@@ -1,14 +1,5 @@
-// async function getWeatherDetails(lonLat) {
-//    let [lat, lon] = lonLat.split(',');
-//    lon = lon.trim();
-//    lat = lat.trim();
-//    console.log(`Longitude: ${lon}, Latitude: ${lat}`);
-
-//    const url = ;
-//    const response = await fetch("getWeather.php?lat=" + lat + "&lon=" + lon);
-//    const data = await response.json();
-//    return data;
-// }
+let abortController = new AbortController();
+let weatherData = null;
 
 function formatSet(obj) {
    console.log(Object.keys(obj));
@@ -30,6 +21,11 @@ function formatSet(obj) {
          events.forEach((event) => {
             const row = document.createElement("tr");
             row.addEventListener("click", () => {
+               // Abort any ongoing fetch request
+               abortController.abort();
+               abortController = new AbortController();
+               weatherData = null;
+
                const eventDetails = document.getElementById("eventDetails");
                const weatherInfo = document.getElementById("weatherInfo");
                weatherInfo.innerHTML = "";
@@ -58,32 +54,28 @@ function formatSet(obj) {
                      eventDetails.appendChild(detail);
                   });
 
-               const icon = document.createElement("button");
-               icon.addEventListener("click", () => {
-                  weatherInfo.style.display = "block";
-                  weatherInfo.innerHTML = "";
+               let buttonStorage = document.createElement("tr");
+               buttonStorage.id = "buttonStorage";
+               eventDetails.appendChild(buttonStorage);
+
+               const fetchWeather = () => {
                   let [lat, lon] = event["lon_lat"].split(",");
                   lat = lat.trim();
                   lon = lon.trim();
-                  fetch("getWeather.php?lat=" + lat + "&lon=" + lon)
+                  fetch("getWeather.php?lat=" + lat + "&lon=" + lon, { signal: abortController.signal })
                      .then((weather) => weather.json())
                      .then((weather) => {
                         console.log(weather);
-                        const weatherDetails = ["temp", "humidity", "weather"];
-                        weatherDetails.forEach((weatherDetail) => {
-                           const detail = document.createElement("p");
-
-                           detail.textContent = `${weatherDetail}: ${weather.main[weatherDetail]}`;
-
-                           if (weatherDetail === "weather") {
-                              detail.textContent = `${weatherDetail}: ${weather.weather[0].description}`;
-                           }
-
-                           weatherInfo.appendChild(detail);
-                        });
+                        weatherData = weather;
+                     })
+                     .catch((err) => {
+                        if (err.name === 'AbortError') {
+                           console.log('Fetch aborted');
+                        } else {
+                           console.error('Fetch error:', err);
+                        }
                      });
-               });
-               eventDetails.appendChild(icon);
+               };
 
                const saveButton = document.createElement("button");
                saveButton.innerHTML = "Save";
@@ -123,7 +115,34 @@ function formatSet(obj) {
                      });
                });
 
-               eventDetails.appendChild(saveButton);
+               const showWeatherButton = document.createElement("button");
+               showWeatherButton.innerHTML = "Show Weather";
+               showWeatherButton.addEventListener("click", () => {
+                  if (weatherData) {
+                     weatherInfo.innerHTML = "";
+                     weatherInfo.style.display = "block";
+                     const weatherDetails = ["temp", "humidity", "weather"];
+                     weatherDetails.forEach((weatherDetail) => {
+                        const detail = document.createElement("p");
+
+                        detail.textContent = `${weatherDetail}: ${weatherData.main[weatherDetail]}`;
+
+                        if (weatherDetail === "weather") {
+                           detail.textContent = `${weatherDetail}: ${weatherData.weather[0].description}`;
+                        }
+
+                        weatherInfo.appendChild(detail);
+                     });
+                  } else {
+                     console.log("Weather data is still loading...");
+                  }
+               });
+
+               buttonStorage.appendChild(saveButton);
+               buttonStorage.appendChild(showWeatherButton);
+
+               // Fetch weather data when the event is clicked
+               fetchWeather();
             });
             dataToDisplay.forEach((data) => {
                const cell = document.createElement("td");
