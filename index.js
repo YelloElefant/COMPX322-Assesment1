@@ -1,5 +1,7 @@
 let abortController = new AbortController();
 let weatherData = null;
+let activeEvent = null;
+const specialSlot = document.getElementById("specialSpot");
 
 function formatSet(obj) {
    console.log(Object.keys(obj));
@@ -21,13 +23,30 @@ function formatSet(obj) {
          events.forEach((event) => {
             const row = document.createElement("tr");
             row.addEventListener("click", () => {
-               // Abort any ongoing fetch request
+               if (activeEvent) {
+                  activeEvent.classList.remove("active");
+                  activeEvent.style.display = "table-row";
+               }
+               activeEvent = row;
+               activeEvent.classList.add("active");
+
+               specialSlot.style.display = "table-row";
+               specialSlot.innerHTML = row.innerHTML;
+               row.style.display = "none";
+
+
+               window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+               });
+
                abortController.abort();
                abortController = new AbortController();
                weatherData = null;
 
                const eventDetails = document.getElementById("eventDetails");
                const weatherInfo = document.getElementById("weatherInfo");
+               weatherInfo.style.display = "none";
                weatherInfo.innerHTML = "";
                eventDetails.style.display = "block";
                console.log(event);
@@ -36,20 +55,33 @@ function formatSet(obj) {
                Object.keys(event)
                   .sort()
                   .forEach((key) => {
+                     if (key === "id") {
+                        return;
+                     }
                      const detail = document.createElement("tr");
                      detail.classList.add("eventDetail");
 
                      const detailKey = document.createElement("td");
                      detailKey.classList.add("detailKey");
-                     detailKey.innerHTML = key;
+                     // capitalize the first letter of the key
+                     if (key === "lon_lat") {
+                        detailKey.innerHTML = "Location";
+                     } else {
+                        detailKey.innerHTML = key.charAt(0).toUpperCase() + key.slice(1);
+                     }
 
                      const detailValue = document.createElement("td");
                      detailValue.classList.add("detailValue");
                      detailValue.setAttribute("contenteditable", "true");
+                     detailValue.classList.add("editable");
                      detailValue.innerHTML = event[key];
+
+                     const pencil = document.createElement("i");
+                     pencil.classList.add("fa", "fa-pencil-alt", "edit-icon");
 
                      detail.appendChild(detailKey);
                      detail.appendChild(detailValue);
+                     detail.appendChild(pencil);
 
                      eventDetails.appendChild(detail);
                   });
@@ -120,19 +152,25 @@ function formatSet(obj) {
                showWeatherButton.addEventListener("click", () => {
                   if (weatherData) {
                      weatherInfo.innerHTML = "";
-                     weatherInfo.style.display = "block";
-                     const weatherDetails = ["temp", "humidity", "weather"];
-                     weatherDetails.forEach((weatherDetail) => {
-                        const detail = document.createElement("p");
+                     weatherInfo.style.display = "inline";
 
-                        detail.textContent = `${weatherDetail}: ${weatherData.main[weatherDetail]}`;
+                     // Basic Info
+                     const basicInfo = document.createElement("div");
+                     basicInfo.id = "basicInfo";
+                     basicInfo.innerHTML = `
+                        <h3>Weather:</h3>
+                        <p>Current Temperature: ${weatherData.main.temp} °C / ${((weatherData.main.temp * 9 / 5) + 32).toFixed(2)} °F</p>
+                        <p>Feels Like Temperature: ${weatherData.main.feels_like} °C / ${((weatherData.main.feels_like * 9 / 5) + 32).toFixed(2)} °F</p>
+                        <p>Weather Condition: ${weatherData.weather[0].description}</p>
+                        <p>Humidity: ${weatherData.main.humidity}%</p>
+                        <p>Wind Speed: ${weatherData.wind.speed} m/s, Direction: ${weatherData.wind.deg}°</p>
+                        <p>Precipitation Chance: ${weatherData.rain ? weatherData.rain["1h"] : 0} mm/h</p>
+                        <p>Sunrise: ${new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString()}</p>
+                        <p>Sunset: ${new Date(weatherData.sys.sunset * 1000).toLocaleTimeString()}</p>
+                        `;
+                     weatherInfo.appendChild(basicInfo);
 
-                        if (weatherDetail === "weather") {
-                           detail.textContent = `${weatherDetail}: ${weatherData.weather[0].description}`;
-                        }
 
-                        weatherInfo.appendChild(detail);
-                     });
                   } else {
                      console.log("Weather data is still loading...");
                   }

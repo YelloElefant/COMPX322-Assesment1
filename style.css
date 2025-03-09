@@ -8,6 +8,8 @@
 body {
   background-color: #121212;
   color: #e0e0e0;
+  line-height: 1.6;
+  font-size: 16px;
 }
 
 ul {
@@ -24,14 +26,15 @@ a {
 
 a:hover {
   color: #03dac6;
+  transition: color 0.2s;
 }
 
 #wrapper {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  flex-wrap: wrap;
   justify-content: center;
   padding: 20px;
+  gap: 20px;
 }
 
 #eventDetails,
@@ -39,36 +42,91 @@ a:hover {
   display: none;
   background-color: #1e1e1e;
   border: solid thin #bb86fc;
-  padding: 10px;
+  padding: 20px;
   margin: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .item,
 table {
-  margin: 5px;
-  padding: 5px;
+  margin: 10px;
+  padding: 10px;
   border: solid thin #bb86fc;
   background-color: #1e1e1e;
-  border-radius: 5px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
 }
 
 th,
 td {
-  padding: 10px;
-  border: solid thin #bb86fc;
+  padding: 12px;
+  text-align: left;
+  border-radius: 5px;
 }
 
 th {
-  background-color: #333333;
+  font-weight: bold;
+  text-align: center;
+  background-color: transparent;
+  color: #bb86fc;
+  font-size: 20px;
 }
 
 .eventDetail td {
-  padding: 5px;
+  padding: 8px;
 }
 
-.eventDetail td:nth-child(odd) {
-  border-right: solid thin #bb86fc;
+#eventTable,
+#eventDetails {
+  border-spacing: 10px;
+}
+
+#eventTable td {
+  padding: 15px;
+}
+
+#eventTable tr.active {
+  background-color: #444444;
+}
+
+#eventTable tr:hover:not(.active) {
+  background-color: #333333;
+}
+
+#specialSpot {
+  background-color: #2a2a2a;
+  padding: 10px;
+  border: 1px solid #a855f7;
+  border-radius: 10px;
+  color: #fff;
+  display: none;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+#specialSpot td {
+  box-shadow: 0px 0px 10px rgba(168, 85, 247, 0.5);
+}
+
+#eventTable tbody {
+  border-bottom: 1px solid #a855f7;
+}
+
+
+table td {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid #a855f7;
+  border-radius: 5px;
+}
+
+table tr:hover td {
+  background-color: #333333;
+  cursor: pointer;
 }
 
 button {
@@ -77,23 +135,127 @@ button {
   background-color: #bb86fc;
   color: #121212;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  margin: 5px;
+  margin: 10px;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
 }
 
 button:hover {
   background-color: #03dac6;
+  transform: scale(1.05);
 }
 
 #buttonStorage {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 500px;
 }
 
-/* Added hover styles for clickable rows */
-#eventTable tr:hover {
-  background-color: #333333;
+.editable {
+  background-color: #2a2a2a;
+  padding: 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #e0e0e0;
+}
+
+.editable:focus {
+  outline: 2px solid #a855f7;
+  background-color: #333;
+}
+
+#eventTable td:nth-child(odd),
+#eventDetails td:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#eventTable td:nth-child(even),
+#eventDetails td:nth-child(even) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Focus style for editable fields */
+#eventDetails td.editable:focus {
+  background-color: #333;
+  outline: 2px solid #a855f7;
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-15deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+
+  75% {
+    transform: rotate(-10deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.edit-icon {
+  color: #a855f7;
   cursor: pointer;
+  margin-left: 8px;
+  font-size: 14px;
+  transition: color 0.2s;
+  display: inline-block;
+}
+
+.edit-icon:hover {
+  color: #c084fc;
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Weather Section Styling */
+#weatherInfo {
+  background: #1e1e1e;
+  color: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(168, 85, 247, 0.5);
+  width: fit-content;
+  max-width: 350px;
+  margin-top: 10px;
+  border: 1px solid #a855f7;
+}
+
+#weatherInfo h3 {
+  color: #c084fc;
+  font-size: 20px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#weatherInfo p {
+  font-size: 14px;
+  margin: 5px 0;
+  padding: 5px;
+  border-left: 3px solid #a855f7;
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: 10px;
+  border-radius: 5px;
+}
+
+#weatherInfo p:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+#weatherInfo:hover {
+  /* transform: scale(1.02); */
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 0px 15px rgba(168, 85, 247, 0.8);
 }
