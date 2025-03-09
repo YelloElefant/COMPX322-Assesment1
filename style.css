@@ -124,7 +124,7 @@ table td {
   border-radius: 5px;
 }
 
-table tr:hover td {
+#eventTable tr:hover td {
   background-color: #333333;
   cursor: pointer;
 }
@@ -173,15 +173,12 @@ button:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-#eventTable td:nth-child(even),
-#eventDetails td:nth-child(even) {
-  background: rgba(255, 255, 255, 0.1);
-}
 
-/* Focus style for editable fields */
-#eventDetails td.editable:focus {
-  background-color: #333;
-  outline: 2px solid #a855f7;
+
+
+.editable:hover {
+  cursor: text;
+  background-color: #333333;
 }
 
 @keyframes shake {
