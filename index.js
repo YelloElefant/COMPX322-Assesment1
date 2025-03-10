@@ -1,7 +1,8 @@
 let abortController = new AbortController();
 let weatherData = null;
 let activeEvent = null;
-const specialSlot = document.getElementById("specialSpot");
+let specialSlot = document.getElementById("specialSpot");
+const eventTableOriginal = document.getElementById("eventTable").cloneNode(true);
 
 function formatSet(obj) {
    console.log(Object.keys(obj));
@@ -16,12 +17,18 @@ function formatSet(obj) {
       .then((events) => events.json())
       .then((events) => {
          const eventTable = document.getElementById("eventTable");
-
          console.log(events);
+
+         if (activeEvent !== null) {
+            eventTableOriginal.querySelector("#specialSpot").innerHTML = specialSlot.innerHTML;
+            eventTable.innerHTML = eventTableOriginal.innerHTML;
+         }
 
          const dataToDisplay = ["name", "location"];
          events.forEach((event) => {
             const row = document.createElement("tr");
+
+
             row.addEventListener("click", () => {
                if (activeEvent) {
                   activeEvent.classList.remove("active");
@@ -29,9 +36,11 @@ function formatSet(obj) {
                }
                activeEvent = row;
                activeEvent.classList.add("active");
-
+               let specialSlot = document.getElementById("specialSpot");
                specialSlot.style.display = "table-row";
                specialSlot.innerHTML = row.innerHTML;
+               console.log(specialSlot);
+
                row.style.display = "none";
 
 
@@ -65,10 +74,12 @@ function formatSet(obj) {
                      detailKey.classList.add("detailKey");
                      // capitalize the first letter of the key
                      if (key === "lon_lat") {
-                        detailKey.innerHTML = "Location";
+                        detailKey.innerHTML = "Longitude, Latitude";
                      } else {
                         detailKey.innerHTML = key.charAt(0).toUpperCase() + key.slice(1);
                      }
+
+                     detailKey.setAttribute("sql-key", key)
 
                      const detailValue = document.createElement("td");
                      detailValue.classList.add("detailValue");
@@ -116,20 +127,33 @@ function formatSet(obj) {
                   let values = document.getElementsByClassName("detailValue");
                   let changedValues = {};
                   for (let i = 0; i < keys.length; i++) {
-                     if (values[i].innerHTML !== event[keys[i].innerHTML]) {
+                     values[i].innerHTML = values[i].innerHTML.trim();
+                     if (values[i].innerHTML !== event[keys[i].getAttribute("sql-key")]) {
                         if (values[i].innerHTML.includes("<br>")) {
                            values[i].innerHTML = values[i].innerHTML.replace(
                               "<br>",
                               ""
                            );
                         }
-                        changedValues[keys[i].innerHTML] = values[i].innerHTML.trim();
-                        event[keys[i].innerHTML] = changedValues[keys[i].innerHTML];
+                        if (values[i].innerHTML.includes("&nbsp;")) {
+                           values[i].innerHTML = values[i].innerHTML.replace(
+                              "&nbsp;",
+                              ""
+                           );
+                        }
+                        changedValues[keys[i].getAttribute("sql-key")] = values[i].innerHTML.trim();
+                        event[keys[i].getAttribute("sql-key")] = changedValues[keys[i].getAttribute("sql-key")];
                      }
                   }
                   let set = formatSet(changedValues);
-
-                  console.log(set);
+                  // update the specilSlot with the new values
+                  specialSlot.innerHTML = "";
+                  dataToDisplay.forEach((data) => {
+                     const cell = document.createElement("td");
+                     cell.textContent = event[data];
+                     specialSlot.appendChild(cell);
+                  }
+                  );
                   fetch("events.php", {
                      method: "POST",
                      headers: {
@@ -142,9 +166,7 @@ function formatSet(obj) {
                   })
                      .then((response) => response.text())
                      .then((response) => console.log(response))
-                     .then(() => {
-                        cell.innerHTML = changedValues.name;
-                     });
+                     .then(() => main());
                });
 
                const showWeatherButton = document.createElement("button");
@@ -187,6 +209,16 @@ function formatSet(obj) {
                cell.textContent = event[data];
                row.appendChild(cell);
             });
+            try {
+               console.log(specialSlot.innerHTML == row.innerHTML);
+               if (specialSlot.innerHTML == row.innerHTML) {
+                  console.log("active");
+
+                  row.classList.add("active");
+                  row.style.display = "none";
+                  activeEvent = row;
+               }
+            } catch (e) { }
             eventTable.appendChild(row);
          });
       });

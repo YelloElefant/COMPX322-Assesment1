@@ -57,7 +57,7 @@ table {
   background-color: #1e1e1e;
   border-radius: 12px;
   width: 100%;
-  max-width: 500px;
+  max-width: 600px;
 }
 
 th,
@@ -102,7 +102,7 @@ th {
   border: 1px solid #a855f7;
   border-radius: 10px;
   color: #fff;
-  display: none;
+  /* display: none; */
   margin-top: 20px;
   width: 100%;
   max-width: 500px;
