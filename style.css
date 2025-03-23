@@ -1,8 +1,22 @@
+:root {
+  --lavender-web: #d9d0deff;
+  --puce: #bc8da0ff;
+  --china-rose: #a04668ff;
+  --secondary: #ab4967ff;
+  --primary: #0c1713ff;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+  font-size: small;
+  color: var(--secondary);
+}
+
+html {
+  background-color: var(--primary);
 }
 
 ul {
@@ -10,15 +24,6 @@ ul {
   margin: 0;
   padding: 0;
   overflow: hidden;
-}
-
-a {
-  text-decoration: none;
-  color: black;
-}
-
-a:hover {
-  color: red;
 }
 
 #eventDetails,
@@ -30,18 +35,34 @@ a:hover {
 table {
   margin: 5px;
   padding: 5px;
-  border: solid thin black;
+  border-collapse: collapse;
 }
 
 #wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding: 0 10px;
 }
 
-.eventDetail td {
+th {
+  color: var(--china-rose);
+  font-size: large;
+}
+
+td {
   padding: 5px;
+}
+
+tr {
+  border-bottom: var(--lavender-web) solid thin;
+  transition: background-color 0.25s ease;
+}
+
+tr:hover {
+  background-color: var(--lavender-web);
+  cursor: pointer;
 }
 
 .eventDetail td:nth-child(odd) {
@@ -51,4 +72,12 @@ table {
 button {
   height: 50px;
   width: 150px;
+  background-color: transparent;
+  border: none;
+  transition: background-color 0.25s ease;
+  border-radius: 10px;
+}
+
+button:hover {
+  background-color: var(--puce);
 }
